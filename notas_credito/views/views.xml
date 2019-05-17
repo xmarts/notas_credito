@@ -1,0 +1,39 @@
+<odoo>
+  <data>
+     <record model='ir.ui.view' id="xmarts_account_invoice_refund">
+        <field name="name">xmarts_account_invoice_refund</field>
+        <field name="model">account.invoice.refund</field>
+        <field name="inherit_id" ref="account.view_account_invoice_refund" />
+        <field name="arch" type="xml">
+           <xpath expr="//field[@name='description']" position="after"> 
+            <field name="notas_motivo" />
+
+            <!-- widget="selection" -->
+            
+            </xpath> 
+
+              <xpath expr="//field[@name='description']" position="attributes"> 
+            <attribute name="required">False</attribute>
+             <attribute name="invisible">1</attribute>
+            </xpath> 
+      
+        </field>
+      </record>
+
+      <record model='ir.ui.view' id="xmarts_stock_picking">
+        <field name="name">stock_picking</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+           
+
+            <xpath expr="//field[@name='origin']" position="after"> 
+           
+              <field name="retorno" invisible="1"/>
+            
+            </xpath> 
+      
+        </field>
+      </record>
+  </data>
+</odoo>
