@@ -247,7 +247,7 @@ class stock_inherit(models.Model):
             date_due=fac.date_due
 
             entrada_tax =self.env['account.invoice.tax']
-            fac_tax=entrada_tax.search([('invoice_id', '=', refund)])
+            fac_tax=entrada_tax.search([('invoice_id', '=', refund)], limit=1)
             tax_id=fac_tax.tax_id.id
             lines = entrada.search([('name', '=', self.group_id.name)])
 
