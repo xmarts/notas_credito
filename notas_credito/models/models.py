@@ -274,9 +274,14 @@ class stock_inherit(models.Model):
                             for lis in lines_stock:
                                 for li in lis.sale_line_id:
                                     if li.product_id==lis.product_id:
+                                        taxes = []
+                                        valor = 0.0                                                
+                                        for t in li.tax_id:
+                                            taxes.append(t.id)
+                                            valor=t.amount
                                         amount_tax = 0.0
                                         for line in lis.sale_line_id:
-                                            amount_tax += line.price_tax    
+                                            amount_tax += ((lis.product_uom_qty*line.price_unit)*valor)/100  
 
                                         tax=self.env['account.invoice.tax'].create({
                                         'invoice_id':invoice,
@@ -286,9 +291,11 @@ class stock_inherit(models.Model):
                                         'amount':amount_tax,
                                         })
 
-                                        taxes = []                                                
-                                        for t in li.tax_id:
-                                            taxes.append(t.id)
+                                        # taxes = []
+                                        # valor = 0.0                                                
+                                        # for t in li.tax_id:
+                                        #     taxes.append(t.id)
+                                        #     valor=t.amount
 
                                         invoice_line=self.env['account.invoice.line'].create({
                                         'invoice_id':invoice,
@@ -302,7 +309,7 @@ class stock_inherit(models.Model):
                                         'account_id':account_id,
                                         #'account_analytic_id'
                                         #'analytic_tag_ids'
-                                        'quantity':li.product_uom_qty,
+                                        'quantity':lis.product_uom_qty,
                                         'uom_id':li.product_uom.id,
                                         'price_unit':li.price_unit,
                                         'discount':li.discount,
