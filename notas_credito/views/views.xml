@@ -35,5 +35,20 @@
       
         </field>
       </record>
+      <record model='ir.ui.view' id="xmarts_view_stock_return_picking_form">
+        <field name="name">xmarts_view_stock_return_picking_form</field>
+        <field name="model">stock.return.picking</field>
+        <field name="inherit_id" ref="stock.view_stock_return_picking_form" />
+        <field name="arch" type="xml">
+           
+
+            <xpath expr="//field[@name='parent_location_id']" position="after"> 
+           
+              <field name="notas_motivo" />
+            
+            </xpath> 
+      
+        </field>
+      </record>
   </data>
 </odoo>

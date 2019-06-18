@@ -125,6 +125,9 @@ class AccountInvoiceRefund(models.TransientModel):
 class ReturnPicking(models.TransientModel):
     _inherit ='stock.return.picking'
 
+    notas_motivo = fields.Many2one('motivo.nota', string='Modelo')
+
+
     def _prepare_move_default_values(self, return_line, new_picking):
         vals = {
             'product_id': return_line.product_id.id,
@@ -228,9 +231,12 @@ class stock_inherit(models.Model):
             raise UserError(_('Please add some items to move.'))
 
         if self.retorno==True:
-            entrada_motivo =self.env['motivo.nota']
-            mov= entrada_motivo.search([('name', '=', 'Merma')])
-            motivo=mov.id
+            entrada_stock_picking =self.env['stock.picking']
+            mov= entrada_stock_picking.search([('origin', '=', self.group_id.name)])
+            nombre=mov.id
+            entrada_stock_picking_return =self.env['stock.return.picking']
+            nota_li= entrada_stock_picking_return.search([('picking_id', '=', nombre)])
+            nota_id=nota_li.notas_motivo.id
             
             entrada =self.env['sale.order']
             entrada_stock =self.env['stock.move']
@@ -252,7 +258,7 @@ class stock_inherit(models.Model):
             lines = entrada.search([('name', '=', self.group_id.name)])
 
             lines_stock = entrada_stock.search([('reference', '=', self.name)])
-            ac_ref=self.env['account.invoice.refund'].create({'filter_refund':'refund','description':'tt','notas_motivo':motivo,'date_invoice':fields.Datetime.now()})
+            ac_ref=self.env['account.invoice.refund'].create({'filter_refund':'refund','description':'tt','notas_motivo':nota_id,'date_invoice':fields.Datetime.now()})
             if ac_ref:
                 name=ac_ref.notas_motivo.name
                 if lines:
