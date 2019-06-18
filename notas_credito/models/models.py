@@ -22,7 +22,7 @@ class AccountInvoiceRefund(models.TransientModel):
             return inv.name
         return ''    
    
-    notas_motivo = fields.Many2one('motivo.nota', string='Modelo')
+    notas_motivo = fields.Many2one('motivo.nota', string='Motivo')
 
    	
     description = fields.Char(string='Reason', default="t")
@@ -125,7 +125,7 @@ class AccountInvoiceRefund(models.TransientModel):
 class ReturnPicking(models.TransientModel):
     _inherit ='stock.return.picking'
 
-    notas_motivo = fields.Many2one('motivo.nota', string='Modelo')
+    notas_motivo = fields.Many2one('motivo.nota', string='Motivo')
 
 
     def _prepare_move_default_values(self, return_line, new_picking):
@@ -235,7 +235,7 @@ class stock_inherit(models.Model):
             mov= entrada_stock_picking.search([('origin', '=', self.group_id.name)])
             nombre=mov.id
             entrada_stock_picking_return =self.env['stock.return.picking']
-            nota_li= entrada_stock_picking_return.search([('picking_id', '=', nombre)])
+            nota_li= entrada_stock_picking_return.search([('picking_id', '=', nombre)], limit=1)
             nota_id=nota_li.notas_motivo.id
             
             entrada =self.env['sale.order']
